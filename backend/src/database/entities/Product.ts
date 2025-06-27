@@ -1,6 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany, UpdateDateColumn, CreateDateColumn, ManyToOne, JoinColumn, Index } from 'typeorm';
 import { Discount } from './Discount';
 import { User } from './User';
+import { UnitOfMeasure } from './UnitOfMeasure';
 
 @Entity()
 export class Product {
@@ -20,8 +21,15 @@ export class Product {
   @Column({ type: 'decimal', precision: 10, scale: 2 })
   unit_price!: number;
 
-  @Column()
-  unit_of_measure!: string;
+  @ManyToOne(() => UnitOfMeasure, { eager: false })
+  @JoinColumn({ 
+    name: "unit_of_measure_id",
+    foreignKeyConstraintName: "fk_product_unit_of_measure"
+  })
+  unit_of_measure?: UnitOfMeasure;
+
+  @Column({ name: "unit_of_measure_id", insert: false, update: false })
+  unit_of_measure_id!: number;
 
   @OneToMany(() => Discount, (discount) => discount.product)
   discounts!: Discount[];
