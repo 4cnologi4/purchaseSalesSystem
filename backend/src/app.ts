@@ -1,8 +1,8 @@
 import express from 'express';
 import 'reflect-metadata';
-//import authRoutes from './routes/auth.routes';
 import cors from 'cors';
 import morgan from 'morgan';
+import authRoutes from './routes/auth.routes';
 
 const app = express();
 app.use(cors());
@@ -14,6 +14,6 @@ app.get('/', (req, res) => {
   res.send('Hello World');
 });
 
-//app.use('/api/auth', authRoutes);
+app.use('/api/auth', authRoutes);
 
 export default app;
