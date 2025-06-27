@@ -1,12 +1,16 @@
 import { DataSource } from 'typeorm';
+import * as dotenv from "dotenv";
+
+dotenv.config();
 
 export const AppDataSource = new DataSource({
   type: 'mysql',
-  host: 'localhost', // o la dirección de tu servidor MySQL
-  port: 3306, // puerto por defecto de MySQL
-  username: 'tu_usuario',
-  password: 'tu_contraseña',
-  database: 'nombre_de_tu_base_de_datos',
+  host: process.env.DB_HOST,
+  port: +(process.env.DB_PORT || 3306),
+  username: process.env.DB_USER,
+  password: process.env.DB_PASS,
+  database: process.env.DB_NAME,
+  synchronize: false,
   logging: true,
   entities: ['src/database/entities/**/*.ts'],
   migrations: ['src/database/migrations/**/*.ts'],

@@ -1,4 +1,5 @@
 import express from 'express';
+import 'reflect-metadata';
 //import authRoutes from './routes/auth.routes';
 import cors from 'cors';
 import morgan from 'morgan';
