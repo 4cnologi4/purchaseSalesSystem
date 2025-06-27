@@ -32,12 +32,18 @@ export class Sale {
   })
   created_by?: User;
 
+  @Column({ name: "created_by_user_id" })
+  created_by_user_id!: string;
+
   @ManyToOne(() => User, { nullable: true })
   @JoinColumn({ 
     name: "updated_by_user_id", 
     foreignKeyConstraintName: "fk_sale_updated_by" 
   })
   updated_by?: User;
+
+  @Column({ name: "updated_by_user_id" })
+  updated_by_user_id!: string;
 
   @CreateDateColumn({ type: 'timestamp' })
   created_at!: Date;
