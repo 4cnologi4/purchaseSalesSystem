@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
 import { Sale } from './Sale';
 import { Product } from './Product';
 
@@ -7,10 +7,12 @@ export class SaleDetail {
   @PrimaryGeneratedColumn('uuid')
   id!: string;
 
-  @ManyToOne(() => Sale, (sale) => sale.details)
+  @ManyToOne(() => Sale, (sale) => sale.details, { nullable: true })
+  @JoinColumn({ name: 'sale_id', foreignKeyConstraintName: 'fk_sale_id' })
   sale!: Sale;
 
-  @ManyToOne(() => Product)
+  @ManyToOne(() => Product, (product) => product.description, { nullable: true })
+  @JoinColumn({ name: 'product_id', foreignKeyConstraintName: 'fk_sale_detail_product_id' })
   product!: Product;
 
   @Column()

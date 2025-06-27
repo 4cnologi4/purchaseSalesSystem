@@ -7,7 +7,8 @@ export class Discount {
   @PrimaryGeneratedColumn('uuid')
   id!: string;
 
-  @ManyToOne(() => Product, (product) => product.discounts)
+  @ManyToOne(() => Product, (product) => product.discounts, { nullable: true })
+  @JoinColumn({ name: 'product_id', foreignKeyConstraintName: 'fk_discount_product_id' })
   product!: Product;
 
   @Column({ type: 'enum', enum: ['percentage'] })
