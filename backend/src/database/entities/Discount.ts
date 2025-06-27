@@ -8,13 +8,19 @@ export class Discount {
   id!: string;
 
   @ManyToOne(() => Product, (product) => product.discounts, { nullable: true })
-  @JoinColumn({ name: 'product_id', foreignKeyConstraintName: 'fk_discount_product_id' })
-  product!: Product;
+  @JoinColumn({
+    name: 'product_id',
+    foreignKeyConstraintName: 'fk_discount_product_id'
+  })
+  product?: Product;
 
-  @Column({ type: 'enum', enum: ['percentage'] })
-  type!: string;
+  @Column({ name: "product_id" })
+  product_id!: string;
 
-  @Column({ type: 'decimal', precision: 5, scale: 2 })
+  @Column({ type: 'smallint' })
+  type!: number;
+
+  @Column({ type: 'decimal', precision: 10, scale: 2 })
   value!: number;
 
   @Column({ type: 'date' })
@@ -27,12 +33,24 @@ export class Discount {
   is_active!: boolean;
 
   @ManyToOne(() => User, { nullable: true })
-  @JoinColumn({ name: 'created_by_user_id', foreignKeyConstraintName: 'fk_discount_created_by' })
+  @JoinColumn({
+    name: 'created_by_user_id',
+    foreignKeyConstraintName: 'fk_discount_created_by'
+  })
   created_by?: User;
 
+  @Column({ name: "created_by_user_id" })
+  created_by_user_id!: string;
+
   @ManyToOne(() => User, { nullable: true })
-  @JoinColumn({ name: 'updated_by_user_id', foreignKeyConstraintName: 'fk_discount_updated_by' })
+  @JoinColumn({
+    name: 'updated_by_user_id',
+    foreignKeyConstraintName: 'fk_discount_updated_by'
+  })
   updated_by?: User;
+
+  @Column({ name: "updated_by_user_id" })
+  updated_by_user_id!: string;
 
   @CreateDateColumn({ type: 'timestamp' })
   created_at!: Date;

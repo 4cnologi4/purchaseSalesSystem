@@ -22,31 +22,37 @@ export class Product {
   unit_price!: number;
 
   @ManyToOne(() => UnitOfMeasure, { eager: false })
-  @JoinColumn({ 
+  @JoinColumn({
     name: "unit_of_measure_id",
     foreignKeyConstraintName: "fk_product_unit_of_measure"
   })
   unit_of_measure?: UnitOfMeasure;
 
-  @Column({ name: "unit_of_measure_id", insert: false, update: false })
+  @Column({ name: "unit_of_measure_id" })
   unit_of_measure_id!: number;
 
   @OneToMany(() => Discount, (discount) => discount.product)
   discounts!: Discount[];
 
-  @ManyToOne(() => User, { nullable: true })
-  @JoinColumn({ 
-    name: "created_by_user_id", 
-    foreignKeyConstraintName: "fk_product_created_by" 
+  @ManyToOne(() => User, { eager: false })
+  @JoinColumn({
+    name: "created_by_user_id",
+    foreignKeyConstraintName: "fk_product_created_by"
   })
   created_by?: User;
 
-  @ManyToOne(() => User, { nullable: true })
-  @JoinColumn({ 
-    name: "updated_by_user_id", 
-    foreignKeyConstraintName: "fk_product_updated_by" 
+  @Column({ name: "created_by_user_id" })
+  created_by_user_id!: string;
+
+  @ManyToOne(() => User, { eager: false })
+  @JoinColumn({
+    name: "updated_by_user_id",
+    foreignKeyConstraintName: "fk_product_updated_by"
   })
   updated_by?: User;
+
+  @Column({ name: "updated_by_user_id" })
+  updated_by_user_id!: string;
 
   @CreateDateColumn({ type: 'timestamp' })
   created_at?: Date;
