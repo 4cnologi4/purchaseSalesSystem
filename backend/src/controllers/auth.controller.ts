@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { Request, Response as ExpressResponse } from 'express';
 import { AuthService } from '../services/auth.service';
 
 export class AuthController {
@@ -8,13 +8,9 @@ export class AuthController {
     this.authService = new AuthService();
   }
 
-  async login(req: Request, res: Response): Promise<void> {
-    try {
-      const { email, password } = req.body;
-      const result = await this.authService.login(email, password);
-      res.status(200).json(result);
-    } catch (error: any) {
-      res.status(401).json({ message: error.message });
-    }
+  async login(req: Request, res: ExpressResponse): Promise<void> {
+    const { email, password } = req.body;
+    const response = await this.authService.login(email, password);
+    res.status(response.status).json(response);
   }
 } 
