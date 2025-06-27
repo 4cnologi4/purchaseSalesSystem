@@ -1,5 +1,6 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, UpdateDateColumn, CreateDateColumn, JoinColumn } from 'typeorm';
 import { Product } from './Product';
+import { User } from './User';
 
 @Entity()
 export class Discount {
@@ -16,11 +17,25 @@ export class Discount {
   value!: number;
 
   @Column({ type: 'date' })
-  startDate!: Date;
+  start_date!: Date;
 
   @Column({ type: 'date' })
-  endDate!: Date;
+  end_date!: Date;
 
   @Column({ type: 'boolean', default: true })
-  isActive!: boolean;
+  is_active!: boolean;
+
+  @ManyToOne(() => User, { nullable: true })
+  @JoinColumn({ name: 'created_by_user_id', foreignKeyConstraintName: 'fk_discount_created_by' })
+  created_by?: User;
+
+  @ManyToOne(() => User, { nullable: true })
+  @JoinColumn({ name: 'updated_by_user_id', foreignKeyConstraintName: 'fk_discount_updated_by' })
+  updated_by?: User;
+
+  @CreateDateColumn({ type: 'timestamp' })
+  created_at!: Date;
+
+  @UpdateDateColumn({ type: 'timestamp' })
+  updated_at!: Date;
 } 

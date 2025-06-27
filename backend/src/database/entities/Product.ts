@@ -1,5 +1,6 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, UpdateDateColumn, CreateDateColumn, ManyToOne, JoinColumn } from 'typeorm';
 import { Discount } from './Discount';
+import { User } from './User';
 
 @Entity()
 export class Product {
@@ -16,11 +17,31 @@ export class Product {
   description?: string;
 
   @Column({ type: 'decimal', precision: 10, scale: 2 })
-  unitPrice!: number;
+  unit_price!: number;
 
   @Column()
-  unitOfMeasure!: string;
+  unit_of_measure!: string;
 
   @OneToMany(() => Discount, (discount) => discount.product)
   discounts!: Discount[];
+
+  @ManyToOne(() => User, { nullable: true })
+  @JoinColumn({ 
+    name: "created_by_user_id", 
+    foreignKeyConstraintName: "fk_product_created_by" 
+  })
+  created_by?: User;
+
+  @ManyToOne(() => User, { nullable: true })
+  @JoinColumn({ 
+    name: "updated_by_user_id", 
+    foreignKeyConstraintName: "fk_product_updated_by" 
+  })
+  updated_by?: User;
+
+  @CreateDateColumn({ type: 'timestamp' })
+  created_at?: Date;
+
+  @UpdateDateColumn({ type: 'timestamp' })
+  updated_at?: Date;
 } 
