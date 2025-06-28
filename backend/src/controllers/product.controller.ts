@@ -17,8 +17,8 @@ export const ProductController = {
     },
 
     createProduct: [
-        validateRequest(CreateProductRequest),        
-        async (req: Request, res: Response): Promise<void> => {            
+        validateRequest(CreateProductRequest),
+        async (req: Request, res: Response): Promise<void> => {
             const userId = (req as any).user.id;
             const product = await ProductService.createProduct({
                 ...req.body,
@@ -32,8 +32,15 @@ export const ProductController = {
     updateProduct: [
         validateRequest(UpdateProductRequest),
         async (req: Request, res: Response): Promise<void> => {
+            const userId = (req as any).user.id;
             const { id } = req.params;
-            const product = await ProductService.updateProduct(id, req.body);
+            const product = await ProductService.updateProduct(
+                id,
+                {
+                    ...req.body,
+                    updatedByUserId: userId,
+                }
+            );
             res.json(product);
         },
     ],

@@ -21,4 +21,8 @@ export class UpdateProductRequest {
     @IsNumber()
     @IsOptional()
     unitOfMeasureId?: number;
+
+    @IsString()
+    @IsOptional()
+    updatedByUserId?: string;
 } 

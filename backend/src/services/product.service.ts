@@ -3,6 +3,7 @@ import { Product } from '../database/entities/Product';
 import { ProductDto } from '../dtos/Product.dto';
 import { v4 as uuidv4 } from "uuid";
 import { CreateProductRequest } from '../requests/create-product.request';
+import { UpdateProductRequest } from '../requests/update-product.request';
 
 interface IProductService {
     getAllProducts: () => Promise<ProductDto[]>;
@@ -76,8 +77,18 @@ export const ProductService: IProductService = {
         };
     },
 
-    updateProduct: async (id: string, productData: Partial<ProductDto>): Promise<ProductDto | null> => {
-        const product = await ProductRepository.updateProduct(id, productData);
+    updateProduct: async (id: string, productData: Partial<UpdateProductRequest>): Promise<ProductDto | null> => {
+        const productEntity: Partial<Product> = {
+            code: productData.code,
+            name: productData.name,
+            description: productData.description,
+            unit_price: productData.unitPrice,
+            unit_of_measure_id: productData.unitOfMeasureId,
+            updated_by_user_id: productData.updatedByUserId,
+        };
+
+        const product = await ProductRepository.updateProduct(id, productEntity);
+
         if (product) {
             return {
                 id: product.id,
