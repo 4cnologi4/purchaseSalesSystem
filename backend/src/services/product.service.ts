@@ -111,7 +111,6 @@ export const ProductService: IProductService = {
 
     deleteProduct: async (id: string): Promise<{ success: boolean; message: string }> => {
         const product = await ProductRepository.getProductById(id);
-        console.log({product})
         if (!product) {
             return { success: false, message: "Producto no encontrado" };
         }
