@@ -25,7 +25,8 @@ export async function seedProducts() {
             created_by_user_id: testUser.id, // Asignar solo el ID
             updated_by_user_id: testUser.id, // Asignar solo el ID
             created_at: new Date(),
-            updated_at: new Date()
+            updated_at: new Date(),
+            is_active: true
         },
         {
             id: uuidv4(),
@@ -37,7 +38,8 @@ export async function seedProducts() {
             created_by_user_id: testUser.id,
             updated_by_user_id: testUser.id,
             created_at: new Date(),
-            updated_at: new Date()
+            updated_at: new Date(),
+            is_active: true
         },
         {
             id: uuidv4(),
@@ -49,7 +51,8 @@ export async function seedProducts() {
             created_by_user_id: testUser.id,
             updated_by_user_id: testUser.id,
             created_at: new Date(),
-            updated_at: new Date()
+            updated_at: new Date(),
+            is_active: true
         },
         {
             id: uuidv4(),
@@ -61,7 +64,8 @@ export async function seedProducts() {
             created_by_user_id: testUser.id,
             updated_by_user_id: testUser.id,
             created_at: new Date(),
-            updated_at: new Date()
+            updated_at: new Date(),
+            is_active: true
         },
         {
             id: uuidv4(),
@@ -73,7 +77,8 @@ export async function seedProducts() {
             created_by_user_id: testUser.id,
             updated_by_user_id: testUser.id,
             created_at: new Date(),
-            updated_at: new Date()
+            updated_at: new Date(),
+            is_active: true
         },
         {
             id: uuidv4(),
@@ -85,7 +90,8 @@ export async function seedProducts() {
             created_by_user_id: testUser.id,
             updated_by_user_id: testUser.id,
             created_at: new Date(),
-            updated_at: new Date()
+            updated_at: new Date(),
+            is_active: true
         },
         {
             id: uuidv4(),
@@ -97,7 +103,8 @@ export async function seedProducts() {
             created_by_user_id: testUser.id,
             updated_by_user_id: testUser.id,
             created_at: new Date(),
-            updated_at: new Date()
+            updated_at: new Date(),
+            is_active: true
         },
         {
             id: uuidv4(),
@@ -109,7 +116,8 @@ export async function seedProducts() {
             created_by_user_id: testUser.id,
             updated_by_user_id: testUser.id,
             created_at: new Date(),
-            updated_at: new Date()
+            updated_at: new Date(),
+            is_active: true
         },
         {
             id: uuidv4(),
@@ -121,7 +129,8 @@ export async function seedProducts() {
             created_by_user_id: testUser.id,
             updated_by_user_id: testUser.id,
             created_at: new Date(),
-            updated_at: new Date()
+            updated_at: new Date(),
+            is_active: true
         },
         {
             id: uuidv4(),
@@ -133,7 +142,8 @@ export async function seedProducts() {
             created_by_user_id: testUser.id,
             updated_by_user_id: testUser.id,
             created_at: new Date(),
-            updated_at: new Date()
+            updated_at: new Date(),
+            is_active: true
         },
     ];
 

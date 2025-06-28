@@ -9,4 +9,5 @@ export class ProductDto {
     updatedByUserId?: string;
     createdAt?: string;
     updatedAt?: string;
+    isActive?: boolean;
 }

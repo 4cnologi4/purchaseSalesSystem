@@ -10,7 +10,7 @@ interface IProductService {
     getProductById: (id: string) => Promise<ProductDto | null>;
     createProduct: (productData: ProductDto) => Promise<ProductDto>;
     updateProduct: (id: string, productData: Partial<ProductDto>) => Promise<ProductDto | null>;
-    deleteProduct: (id: string) => Promise<void>;
+    deleteProduct: (id: string) => Promise<{ success: boolean; message: string }>;
 }
 
 export const ProductService: IProductService = {
@@ -22,6 +22,7 @@ export const ProductService: IProductService = {
             name: product.name,
             description: product.description,
             unitPrice: product.unit_price,
+            isActive: product.is_active,
             unitOfMeasureId: product.unit_of_measure_id,
             createdByUserId: product.created_by_user_id,
             updatedByUserId: product.updated_by_user_id,
@@ -39,6 +40,7 @@ export const ProductService: IProductService = {
                 name: product.name,
                 description: product.description,
                 unitPrice: product.unit_price,
+                isActive: product.is_active,
                 unitOfMeasureId: product.unit_of_measure_id,
                 createdByUserId: product.created_by_user_id,
                 updatedByUserId: product.updated_by_user_id,
@@ -56,6 +58,7 @@ export const ProductService: IProductService = {
             name: productData.name,
             description: productData.description,
             unit_price: productData.unitPrice,
+            is_active: true,
             unit_of_measure_id: productData.unitOfMeasureId,
             created_by_user_id: productData.createdByUserId,
             updated_by_user_id: productData.updatedByUserId,
@@ -106,7 +109,14 @@ export const ProductService: IProductService = {
         return null;
     },
 
-    deleteProduct: async (id: string): Promise<void> => {
-        return ProductRepository.deleteProduct(id);
+    deleteProduct: async (id: string): Promise<{ success: boolean; message: string }> => {
+        const product = await ProductRepository.getProductById(id);
+        console.log({product})
+        if (!product) {
+            return { success: false, message: "Producto no encontrado" };
+        }
+
+        await ProductRepository.deleteProduct(id);
+        return { success: true, message: "Producto desactivado correctamente" };
     },
 }; 

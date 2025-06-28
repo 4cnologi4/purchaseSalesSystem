@@ -59,4 +59,7 @@ export class Product {
 
   @UpdateDateColumn({ type: 'timestamp' })
   updated_at?: Date;
+
+  @Column({ type: 'boolean', default: true })
+  is_active!: boolean;
 } 

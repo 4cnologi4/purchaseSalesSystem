@@ -13,11 +13,11 @@ interface IProductRepository {
 
 export const ProductRepository: IProductRepository = {
     getAllProducts: async (): Promise<Product[]> => {
-        return productRepository.find();
+        return productRepository.find({ where: { is_active: true } });
     },
 
     getProductById: async (id: string): Promise<Product | null> => {
-        return productRepository.findOneBy({ id });
+        return productRepository.findOneBy({ id, is_active: true });
     },
 
     createProduct: async (productData: Partial<Product>): Promise<Product> => {
@@ -31,6 +31,6 @@ export const ProductRepository: IProductRepository = {
     },
 
     deleteProduct: async (id: string): Promise<void> => {
-        await productRepository.delete(id);
+        await productRepository.update(id, { is_active: false });
     },
 }; 

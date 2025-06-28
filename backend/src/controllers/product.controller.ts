@@ -47,7 +47,13 @@ export const ProductController = {
 
     deleteProduct: async (req: Request, res: Response): Promise<void> => {
         const { id } = req.params;
-        await ProductService.deleteProduct(id);
-        res.status(204).send();
+        const result = await ProductService.deleteProduct(id);
+        
+        if (!result.success) {
+            res.status(404).json({ message: result.message });
+            return;
+        }
+
+        res.status(200).json({ message: result.message });
     },
 }; 
