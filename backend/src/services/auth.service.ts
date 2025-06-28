@@ -1,7 +1,7 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { UserRepository } from '../repository/user.repository';
-import { ResponseDTO } from '../dtos/ResponseDTO';
+import { ResponseDTO } from '../dtos/Response.dto';
 import * as dotenv from 'dotenv';
 
 dotenv.config();
