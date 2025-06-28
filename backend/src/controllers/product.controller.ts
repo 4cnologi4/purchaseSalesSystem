@@ -6,26 +6,26 @@ import { UpdateProductRequest } from '../requests/update-product.request';
 
 export const ProductController = {
     getAllProducts: async (req: Request, res: Response): Promise<void> => {
-        const products = await ProductService.getAllProducts();
-        res.json(products);
+        const response = await ProductService.getAllProducts();
+        res.status(response.status).json(response);
     },
 
     getProductById: async (req: Request, res: Response): Promise<void> => {
         const { id } = req.params;
-        const product = await ProductService.getProductById(id);
-        res.json(product);
+        const response = await ProductService.getProductById(id);
+        res.status(response.status).json(response);
     },
 
     createProduct: [
         validateRequest(CreateProductRequest),
         async (req: Request, res: Response): Promise<void> => {
             const userId = (req as any).user.id;
-            const product = await ProductService.createProduct({
+            const response = await ProductService.createProduct({
                 ...req.body,
                 createdByUserId: userId,
                 updatedByUserId: userId,
             });
-            res.status(201).json(product);
+            res.status(response.status).json(response);
         },
     ],
 
@@ -34,26 +34,20 @@ export const ProductController = {
         async (req: Request, res: Response): Promise<void> => {
             const userId = (req as any).user.id;
             const { id } = req.params;
-            const product = await ProductService.updateProduct(
+            const response = await ProductService.updateProduct(
                 id,
                 {
                     ...req.body,
                     updatedByUserId: userId,
                 }
             );
-            res.json(product);
+            res.status(response.status).json(response);
         },
     ],
 
     deleteProduct: async (req: Request, res: Response): Promise<void> => {
         const { id } = req.params;
-        const result = await ProductService.deleteProduct(id);
-        
-        if (!result.success) {
-            res.status(404).json({ message: result.message });
-            return;
-        }
-
-        res.status(200).json({ message: result.message });
+        const response = await ProductService.deleteProduct(id);
+        res.status(response.status).json(response);
     },
 }; 
