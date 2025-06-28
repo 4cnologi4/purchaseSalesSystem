@@ -1,12 +1,14 @@
 import { ProductRepository } from '../repository/product.repository';
 import { Product } from '../database/entities/Product';
 import { ProductDto } from '../dtos/Product.dto';
+import { v4 as uuidv4 } from "uuid";
+import { CreateProductRequest } from '../requests/create-product.request';
 
 interface IProductService {
     getAllProducts: () => Promise<ProductDto[]>;
     getProductById: (id: string) => Promise<ProductDto | null>;
-    createProduct: (productData: Partial<Product>) => Promise<ProductDto>;
-    updateProduct: (id: string, productData: Partial<Product>) => Promise<ProductDto | null>;
+    createProduct: (productData: ProductDto) => Promise<ProductDto>;
+    updateProduct: (id: string, productData: Partial<ProductDto>) => Promise<ProductDto | null>;
     deleteProduct: (id: string) => Promise<void>;
 }
 
@@ -46,8 +48,20 @@ export const ProductService: IProductService = {
         return null;
     },
 
-    createProduct: async (productData: Partial<Product>): Promise<ProductDto> => {
-        const product = await ProductRepository.createProduct(productData);
+    createProduct: async (productData: CreateProductRequest): Promise<ProductDto> => {
+        const productEntity: Partial<Product> = {
+            id: uuidv4(),
+            code: productData.code,
+            name: productData.name,
+            description: productData.description,
+            unit_price: productData.unitPrice,
+            unit_of_measure_id: productData.unitOfMeasureId,
+            created_by_user_id: productData.createdByUserId,
+            updated_by_user_id: productData.updatedByUserId,
+        };
+
+        const product = await ProductRepository.createProduct(productEntity);
+
         return {
             id: product.id,
             code: product.code,
@@ -62,7 +76,7 @@ export const ProductService: IProductService = {
         };
     },
 
-    updateProduct: async (id: string, productData: Partial<Product>): Promise<ProductDto | null> => {
+    updateProduct: async (id: string, productData: Partial<ProductDto>): Promise<ProductDto | null> => {
         const product = await ProductRepository.updateProduct(id, productData);
         if (product) {
             return {

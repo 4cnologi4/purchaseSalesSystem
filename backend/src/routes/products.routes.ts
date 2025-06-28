@@ -8,8 +8,8 @@ router.use(authenticateJWT); // Aplica el middleware a todas las rutas de produc
 
 router.get('/', ProductController.getAllProducts);
 router.get('/:id', ProductController.getProductById);
-router.post('/', ProductController.createProduct);
-router.put('/:id', ProductController.updateProduct);
+router.post('/', ...ProductController.createProduct); // Usa el spread operator para los middlewares
+router.put('/:id', ...ProductController.updateProduct); // Usa el spread operator para los middlewares
 router.delete('/:id', ProductController.deleteProduct);
 
 export default router; 
