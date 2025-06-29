@@ -1,16 +1,16 @@
 import { ProductRepository } from '../repository/product.repository';
 import { Product } from '../database/entities/Product';
 import { ProductDto } from '../dtos/Product.dto';
-import { v4 as uuidv4 } from "uuid";
 import { CreateProductRequest } from '../requests/create-product.request';
 import { UpdateProductRequest } from '../requests/update-product.request';
 import { ResponseDTO } from '../dtos/Response.dto';
+import { v4 as uuidv4 } from "uuid";
 
 interface IProductService {
     getAllProducts: () => Promise<ResponseDTO>;
     getProductById: (id: string) => Promise<ResponseDTO>;
-    createProduct: (productData: ProductDto) => Promise<ResponseDTO>;
-    updateProduct: (id: string, productData: Partial<ProductDto>) => Promise<ResponseDTO>;
+    createProduct: (productData: CreateProductRequest) => Promise<ResponseDTO>;
+    updateProduct: (id: string, productData: UpdateProductRequest) => Promise<ResponseDTO>;
     deleteProduct: (id: string) => Promise<ResponseDTO>;
 }
 
@@ -18,7 +18,7 @@ export const ProductService: IProductService = {
     getAllProducts: async (): Promise<ResponseDTO> => {
         try {
             const products = await ProductRepository.getAllProducts();
-            const data = products.map(product => ({
+            const data: ProductDto[] = products.map(product => ({
                 id: product.id,
                 code: product.code,
                 name: product.name,
@@ -43,7 +43,7 @@ export const ProductService: IProductService = {
             if (!product) {
                 return new ResponseDTO(false, 'Producto no encontrado', 404);
             }
-            const data = {
+            const data: ProductDto = {
                 id: product.id,
                 code: product.code,
                 name: product.name,
@@ -77,7 +77,7 @@ export const ProductService: IProductService = {
             };
 
             const product = await ProductRepository.createProduct(productEntity);
-            const data = {
+            const data: ProductDto = {
                 id: product.id,
                 code: product.code,
                 name: product.name,
@@ -110,7 +110,7 @@ export const ProductService: IProductService = {
             if (!product) {
                 return new ResponseDTO(false, 'Producto no encontrado', 404);
             }
-            const data = {
+            const data: ProductDto = {
                 id: product.id,
                 code: product.code,
                 name: product.name,
