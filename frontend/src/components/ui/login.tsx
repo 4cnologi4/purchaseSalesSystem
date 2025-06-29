@@ -2,26 +2,26 @@ import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import type { LoginRequest } from "@/requests/login.request";
 
 interface LoginFormData {
   email: string;
   password: string;
 }
 
-export function Login() {
+interface LoginProps {
+  onSubmit: (request: LoginRequest) => void;
+}
+
+export function Login({ onSubmit }: LoginProps) {
   const { register, handleSubmit, formState: { errors } } = useForm<LoginFormData>();
 
-  const onSubmit = async (data: LoginFormData) => {
-    try {
-      // Lógica para enviar los datos al backend usando axios
-      console.log(data);
-    } catch (error) {
-      console.error("Error al iniciar sesión:", error);
-    }
+  const handleFormSubmit = async (data: LoginFormData) => {
+    onSubmit(data);
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+    <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-4">
       <div>
         <Label htmlFor="email">Email</Label>
         <Input
@@ -40,7 +40,9 @@ export function Login() {
         />
         {errors.password && <p className="text-red-500">{errors.password.message}</p>}
       </div>
-      <Button type="submit">Iniciar sesión</Button>
+      <div className="flex justify-center">
+        <Button className="cursor-pointer" type="submit">Iniciar sesión</Button>
+      </div>
     </form>
   );
 } 
