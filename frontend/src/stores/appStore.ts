@@ -5,7 +5,8 @@ import { persist } from "zustand/middleware";
 interface AuthState {
   isAuthenticated: boolean;
   email: string | null;
-  login: (email: string, password: string) => Promise<void>;
+  token: string;
+  login: (email: string, password: string, token: string) => Promise<void>;
   logout: () => void;
 }
 
@@ -19,13 +20,15 @@ export const useAppStore = create<AppState>()(
     (set) => ({
       auth: {
         isAuthenticated: false,
+        token: "",
         email: null,
-        login: async (email: string, password: string) => {
+        login: async (email: string, password: string, token: string) => {
           set((state) => ({
             auth: {
               ...state.auth,
               isAuthenticated: true,
               email,
+              token,
             },
           }));
         },
@@ -35,6 +38,7 @@ export const useAppStore = create<AppState>()(
               ...state.auth,
               isAuthenticated: false,
               email: null,
+              token: "",
             },
           }));
         },

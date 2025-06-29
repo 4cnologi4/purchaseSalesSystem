@@ -1,24 +1,24 @@
 import type { LoginRequest } from "@/requests/login.request";
-import axios from "axios";
 import { useAppStore } from "@/stores/appStore";
+import { axiosInstance } from "./axios.interceptor";
 
 interface LoginResponse {
     success: boolean;
     message: string;
     status: number;
-    data: any;
+    data: {
+        token: string;
+    };
 }
 
 export const AuthService = {
     login: async (request: LoginRequest): Promise<LoginResponse> => {
         try {
-            const response = await axios.post(`${import.meta.env.VITE_BASE_API_URL}/auth/login`,
-                request,
-            );
+            const response = await axiosInstance.post("/auth/login", request);
             
             if (response.data.success) {
                 const { login } = useAppStore.getState().auth;
-                await login(request.email, request.password);
+                await login(request.email, request.password, response.data.data.token);
             }
             
             return response.data;

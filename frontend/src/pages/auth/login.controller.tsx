@@ -12,7 +12,7 @@ export function LoginController() {
     try {
       const response = await httpManager.authService.login(request);
       if (response.success) {
-        await auth.login(request.email, request.password);
+        await auth.login(request.email, request.password, response.data.token);
         navigate("/dashboard"); // Redirige al dashboard
       } else {
         alert("Credenciales incorrectas. Por favor, inténtalo de nuevo.");
