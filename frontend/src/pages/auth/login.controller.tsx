@@ -3,22 +3,22 @@ import { useAppStore } from "@/stores/appStore";
 import { httpManager } from "@/services/HttpManager";
 import type { LoginRequest } from "@/requests/login.request";
 import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 export function LoginController() {
-  const { auth } = useAppStore();
   const navigate = useNavigate();
+  const login = useAppStore((state) => state.login);
 
   const handleLogin = async (request: LoginRequest) => {
     try {
       const response = await httpManager.authService.login(request);
+      
       if (response.success) {
-        await auth.login(request.email, request.password, response.data.token);
-        navigate("/dashboard"); // Redirige al dashboard
-      } else {
-        alert("Credenciales incorrectas. Por favor, inténtalo de nuevo.");
+        login(request.email, response.data.token);
+        navigate("/dashboard");
       }
-    } catch (error) {
-      alert("Error al iniciar sesión. Por favor, inténtalo más tarde.");
+    } catch (error: any) {
+      toast.error(error.message || "Error al iniciar sesión");
       console.error("Error al iniciar sesión:", error);
     }
   };

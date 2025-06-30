@@ -24,11 +24,24 @@ interface EditProductModalProps {
 }
 
 export function EditProductModal({ isOpen, product, onClose, onSuccess }: EditProductModalProps) {
-  const [formData, setFormData] = useState<ProductDto>({ ...product });
+  const getValidUnitId = (value: any): number => {
+    const num = parseInt(value);
+    return (!isNaN(num) && num >= 1 && num <= 4) ? num : 1;
+  };
+
+  const [formData, setFormData] = useState<ProductDto>({
+    ...product,
+    unitPrice: Number(product.unitPrice) || 0,
+    unitOfMeasureId: getValidUnitId(product.unitOfMeasureId)
+  });
   const [showConfirm, setShowConfirm] = useState(false);
 
   useEffect(() => {
-    setFormData({ ...product });
+    setFormData({
+      ...product,
+      unitPrice: Number(product.unitPrice) || 0,
+      unitOfMeasureId: getValidUnitId(product.unitOfMeasureId)
+    });
   }, [product]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -40,10 +53,13 @@ export function EditProductModal({ isOpen, product, onClose, onSuccess }: EditPr
   };
 
   const handleUnitChange = (value: string) => {
-    setFormData({
-      ...formData,
-      unitOfMeasureId: parseInt(value),
-    });
+    const newUnitId = parseInt(value);
+    if (!isNaN(newUnitId)) {
+      setFormData({
+        ...formData,
+        unitOfMeasureId: newUnitId
+      });
+    }
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -63,6 +79,17 @@ export function EditProductModal({ isOpen, product, onClose, onSuccess }: EditPr
       setShowConfirm(false);
     }
   };
+
+  useEffect(() => {
+    console.log('Current validated unitOfMeasureId:', formData.unitOfMeasureId);
+    console.log('Matching unit:', UNITS_OF_MEASURE.find(u => u.value === formData.unitOfMeasureId));
+  }, [formData.unitOfMeasureId]);
+
+  console.log('Product received:', {
+    ...product,
+    unitOfMeasureType: typeof product.unitOfMeasureId,
+    unitOfMeasureRawValue: product.unitOfMeasureId
+  });
 
   return (
     <>
@@ -117,7 +144,9 @@ export function EditProductModal({ isOpen, product, onClose, onSuccess }: EditPr
               onValueChange={handleUnitChange}
             >
               <SelectTrigger>
-                <SelectValue placeholder="Selecciona una unidad" />
+                <SelectValue>
+                  {UNITS_OF_MEASURE.find(u => u.value === formData.unitOfMeasureId)?.label}
+                </SelectValue>
               </SelectTrigger>
               <SelectContent>
                 {UNITS_OF_MEASURE.map((unit) => (

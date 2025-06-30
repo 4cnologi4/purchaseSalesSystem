@@ -6,13 +6,13 @@ interface AuthState {
   isAuthenticated: boolean;
   email: string | null;
   token: string;
-  login: (email: string, password: string, token: string) => Promise<void>;
-  logout: () => void;
 }
 
 // Definición del estado global de la aplicación
 interface AppState {
   auth: AuthState;
+  login: (email: string, token: string) => void;
+  logout: () => void;
 }
 
 export const useAppStore = create<AppState>()(
@@ -20,28 +20,26 @@ export const useAppStore = create<AppState>()(
     (set) => ({
       auth: {
         isAuthenticated: false,
-        token: "",
         email: null,
-        login: async (email: string, password: string, token: string) => {
-          set((state) => ({
-            auth: {
-              ...state.auth,
-              isAuthenticated: true,
-              email,
-              token,
-            },
-          }));
-        },
-        logout: () => {
-          set((state) => ({
-            auth: {
-              ...state.auth,
-              isAuthenticated: false,
-              email: null,
-              token: "",
-            },
-          }));
-        },
+        token: "",
+      },
+      login: (email, token) => {
+        set({
+          auth: {
+            isAuthenticated: true,
+            email,
+            token,
+          },
+        });
+      },
+      logout: () => {
+        set({
+          auth: {
+            isAuthenticated: false,
+            email: null,
+            token: "",
+          },
+        });
       },
     }),
     {

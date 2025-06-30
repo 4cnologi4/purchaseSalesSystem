@@ -1,5 +1,5 @@
 import type { ProductDto } from "@/dtos/Product.dto";
-import { axiosInstance } from "./axios.interceptor";
+import axiosInstance from "./axios.interceptor";
 
 export const ProductsService = {
     getAll: async (): Promise<ProductDto[]> => {
