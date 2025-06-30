@@ -74,6 +74,12 @@ export const DiscountService: IDiscountService = {
 
     createDiscount: async (discountData: CreateDiscountRequest): Promise<ResponseDTO> => {
         try {
+            // Validar si el producto ya tiene un descuento activo
+            const hasDiscount = await DiscountRepository.hasActiveDiscount(discountData.productId);
+            if (hasDiscount) {
+                return new ResponseDTO(false, 'El producto ya tiene un descuento activo', 400);
+            }
+
             const discountEntity: Partial<Discount> = {
                 id: uuidv4(),
                 product_id: discountData.productId,
@@ -112,6 +118,20 @@ export const DiscountService: IDiscountService = {
 
     updateDiscount: async (id: string, discountData: UpdateDiscountRequest): Promise<ResponseDTO> => {
         try {
+            // Obtener el descuento actual para verificar el productId
+            const currentDiscount = await DiscountRepository.getDiscountById(id);
+            if (!currentDiscount) {
+                return new ResponseDTO(false, 'Descuento no encontrado', 404);
+            }
+
+            // Si se está actualizando el productId, validar si el nuevo producto ya tiene un descuento activo
+            if (discountData.productId && discountData.productId !== currentDiscount.product_id) {
+                const hasDiscount = await DiscountRepository.hasActiveDiscount(discountData.productId);
+                if (hasDiscount) {
+                    return new ResponseDTO(false, 'El producto ya tiene un descuento activo', 400);
+                }
+            }
+
             const discountEntity: Partial<Discount> = {
                 product_id: discountData.productId,
                 type: discountData.type,

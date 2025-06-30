@@ -10,6 +10,7 @@ interface IDiscountRepository {
     createDiscount: (discountData: Partial<Discount>) => Promise<Discount>;
     updateDiscount: (id: string, discountData: Partial<Discount>) => Promise<Discount | null>;
     deleteDiscount: (id: string) => Promise<void>;
+    hasActiveDiscount: (productId: string) => Promise<boolean>;
 }
 
 export const DiscountRepository: IDiscountRepository = {
@@ -49,5 +50,15 @@ export const DiscountRepository: IDiscountRepository = {
 
     deleteDiscount: async (id: string): Promise<void> => {
         await discountRepository.update(id, { is_active: false });
+    },
+
+    hasActiveDiscount: async (productId: string): Promise<boolean> => {
+        const count = await discountRepository.count({
+            where: {
+                product_id: productId
+//                is_active: true,
+            },
+        });
+        return count > 0;
     },
 }; 
