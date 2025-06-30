@@ -1,7 +1,7 @@
 import { Table } from "@/components/ui/common-table";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { MdDeleteForever, MdSearch, MdAdd } from "react-icons/md";
+import { MdDeleteForever, MdSearch, MdAdd, MdRemoveRedEye } from "react-icons/md";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import type { SaleDto } from "@/dtos/Sale.dto";
 import { useState } from "react";
@@ -36,15 +36,15 @@ export function SalesView({ sales, loading, onSearch, onDeleteClick, onSaleCreat
         <Tooltip>
           <TooltipTrigger asChild>
             <Button
-              variant="destructive"
+              variant="outline"
               size="icon"
-              onClick={() => onDeleteClick(sale)}
+              onClick={() => console.log("Ver detalle de venta:", sale.id)}
               className="cursor-pointer"
             >
-              <MdDeleteForever className="h-5 w-5" />
+              <MdRemoveRedEye className="h-5 w-5" />
             </Button>
           </TooltipTrigger>
-          <TooltipContent>Eliminar</TooltipContent>
+          <TooltipContent>Ver detalle</TooltipContent>
         </Tooltip>
       ),
     },
