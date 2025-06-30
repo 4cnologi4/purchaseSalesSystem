@@ -34,8 +34,9 @@ export const DiscountsService = {
         try {
             const response = await axiosInstance.post("/discounts", discount);
             return response.data.data;
-        } catch (error) {
-            throw new Error("Error al crear descuento");
+        } catch (error: any) {
+            console.log({error})
+            throw new Error(`Error al crear descuento ${error.response.data.message}`);
         }
     },
     update: async (id: string, discount: UpdateDiscountRequest): Promise<DiscountDto> => {

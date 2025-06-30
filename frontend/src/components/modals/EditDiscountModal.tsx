@@ -8,6 +8,7 @@ import { toast } from "sonner";
 import { ConfirmModal } from "../ui/ConfirmModal";
 import type { DiscountDto } from "@/dtos/Discount.dto";
 import type { UpdateDiscountRequest } from "@/requests/update-discount.request";
+import { httpManager } from "@/services/HttpManager";
 
 interface EditDiscountModalProps {
     isOpen: boolean;
@@ -19,26 +20,41 @@ interface EditDiscountModalProps {
 export function EditDiscountModal({ isOpen, discount, onClose, onSuccess }: EditDiscountModalProps) {
     const [formData, setFormData] = useState<UpdateDiscountRequest>({
         productId: discount.productId,
-        productName: discount.product.name,
-        type: discount.type,
+        productName: discount.product?.name || "",
+        type: discount.type || 0,
         value: +discount.value,
         isActive: discount.isActive,
         startDate: discount.startDate,
-        endDate: discount.endDate
+        endDate: discount.endDate,
     });
     const [showConfirm, setShowConfirm] = useState(false);
+    const [productUnitPrice, setProductUnitPrice] = useState<number | undefined>(undefined);
 
+    // Obtener el precio unitario del producto al cargar el modal
     useEffect(() => {
-        setFormData({
-            productId: discount.productId,
-            productName: discount.product.name,
-            type: discount.type,
-            value: +discount.value,
-            isActive: discount.isActive,
-            startDate: discount.startDate,
-            endDate: discount.endDate
-        });
-    }, [discount]);
+        const fetchProductUnitPrice = async () => {
+            if (discount.productId) {
+                try {
+                    const product = await httpManager.productsService.getById(discount.productId);
+                    setProductUnitPrice(product.unitPrice);
+                } catch (error) {
+                    console.error("Error al obtener el precio del producto:", error);
+                }
+            }
+        };
+        fetchProductUnitPrice();
+    }, [discount.productId]);
+
+    // Calcular el valor del descuento cuando cambia el tipo
+    useEffect(() => {
+        if (productUnitPrice !== undefined && (formData.type ?? 0) > 0) {
+            const calculatedValue = (productUnitPrice * (formData.type ?? 0)) / 100;
+            setFormData(prev => ({
+                ...prev,
+                value: parseFloat(calculatedValue.toFixed(2)),
+            }));
+        }
+    }, [formData.type, productUnitPrice]);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value, type, checked } = e.target;
@@ -76,19 +92,20 @@ export function EditDiscountModal({ isOpen, discount, onClose, onSuccess }: Edit
                         <Input
                             id="productId"
                             name="productId"
-                            value={formData.productName}
+                            value={formData.productId}
                             onChange={handleChange}
                             disabled
                             className="bg-gray-100 cursor-not-allowed"
                         />
                     </div>
 
+                    {/* Campo: Nombre del Producto (deshabilitado) */}
                     <div>
                         <Label htmlFor="productName">Producto</Label>
                         <Input
                             id="productName"
                             name="productName"
-                            value={formData.productId}
+                            value={formData.productName}
                             onChange={handleChange}
                             disabled
                             className="bg-gray-100 cursor-not-allowed"
@@ -97,20 +114,22 @@ export function EditDiscountModal({ isOpen, discount, onClose, onSuccess }: Edit
 
                     {/* Campo: Tipo */}
                     <div>
-                        <Label htmlFor="type">Tipo</Label>
+                        <Label htmlFor="type">Tipo (%)</Label>
                         <Input
                             id="type"
                             name="type"
                             type="number"
+                            min="0"
+                            max="100"
                             value={formData.type}
                             onChange={handleChange}
                             required
                         />
                     </div>
 
-                    {/* Campo: Valor */}
+                    {/* Campo: Valor (calculado automáticamente) */}
                     <div>
-                        <Label htmlFor="value">Valor (%)</Label>
+                        <Label htmlFor="value">Valor ($)</Label>
                         <Input
                             id="value"
                             name="value"
@@ -119,6 +138,8 @@ export function EditDiscountModal({ isOpen, discount, onClose, onSuccess }: Edit
                             value={formData.value}
                             onChange={handleChange}
                             required
+                            readOnly
+                            className="bg-gray-100 cursor-not-allowed"
                         />
                     </div>
 
