@@ -51,13 +51,5 @@ export const ProductsService = {
         } catch (error) {
             throw new Error("Error al eliminar producto");
         }
-    },
-    search: async (query: string): Promise<ProductDto[]> => {
-        try {
-            const response = await axiosInstance.get(`/products?q=${query}`);
-            return response.data.data;
-        } catch (error) {
-            throw new Error("Error al buscar productos");
-        }
     }
 }; 
