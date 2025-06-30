@@ -7,18 +7,29 @@ import { ResponseDTO } from '../dtos/Response.dto';
 import { v4 as uuidv4 } from "uuid";
 
 interface IProductService {
-    getAllProducts: () => Promise<ResponseDTO>;
+    getAllProducts: (options?: GetProductsOptions) => Promise<ResponseDTO>;
     getProductById: (id: string) => Promise<ResponseDTO>;
     createProduct: (productData: CreateProductRequest) => Promise<ResponseDTO>;
     updateProduct: (id: string, productData: UpdateProductRequest) => Promise<ResponseDTO>;
     deleteProduct: (id: string) => Promise<ResponseDTO>;
 }
 
+interface GetProductsOptions {
+    search?: string;
+    code?: string;
+    name?: string;
+}
+
 export const ProductService: IProductService = {
-    getAllProducts: async (): Promise<ResponseDTO> => {
+    getAllProducts: async (options?: GetProductsOptions): Promise<ResponseDTO> => {
         try {
-            const products = await ProductRepository.getAllProducts();
-            const data: ProductDto[] = products.map(product => ({
+            const products = await ProductRepository.searchProducts(options);
+
+            if (products.length === 0) {
+                return new ResponseDTO(true, 'No se encontraron productos', 200, []);
+            }
+
+            const data: ProductDto[] = products.map((product: Product) => ({
                 id: product.id,
                 code: product.code,
                 name: product.name,
@@ -31,6 +42,7 @@ export const ProductService: IProductService = {
                 createdAt: product.created_at?.toISOString(),
                 updatedAt: product.updated_at?.toISOString(),
             }));
+
             return new ResponseDTO(true, 'Productos obtenidos exitosamente', 200, data);
         } catch (error) {
             return new ResponseDTO(false, 'Error al obtener los productos', 500);
