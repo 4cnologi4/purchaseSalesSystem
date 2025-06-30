@@ -1,10 +1,11 @@
 import { AppDataSource } from '../database/data-source';
 import { Discount } from '../database/entities/Discount';
+import { Like } from 'typeorm';
 
 const discountRepository = AppDataSource.getRepository(Discount);
 
 interface IDiscountRepository {
-    getAllDiscounts: () => Promise<Discount[]>;
+    getAllDiscounts: (search?: string) => Promise<Discount[]>;
     getDiscountById: (id: string) => Promise<Discount | null>;
     createDiscount: (discountData: Partial<Discount>) => Promise<Discount>;
     updateDiscount: (id: string, discountData: Partial<Discount>) => Promise<Discount | null>;
@@ -12,12 +13,28 @@ interface IDiscountRepository {
 }
 
 export const DiscountRepository: IDiscountRepository = {
-    getAllDiscounts: async (): Promise<Discount[]> => {
-        return discountRepository.find();
+    getAllDiscounts: async (search?: string): Promise<Discount[]> => {
+        const query = discountRepository.createQueryBuilder('discount')
+            .leftJoinAndSelect('discount.product', 'product');
+
+        if (search) {
+            query.where('product.name LIKE :search', { search: `%${search}%` });
+        }
+
+        return query.getMany();
     },
 
     getDiscountById: async (id: string): Promise<Discount | null> => {
-        return discountRepository.findOneBy({ id });
+        return discountRepository.findOne({
+            where: { id },
+            relations: ['product'],
+            select: {
+                product: {
+                    id: true,
+                    name: true,
+                }
+            }
+        });
     },
 
     createDiscount: async (discountData: Partial<Discount>): Promise<Discount> => {
