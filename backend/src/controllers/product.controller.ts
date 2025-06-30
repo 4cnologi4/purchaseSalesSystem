@@ -6,7 +6,12 @@ import { UpdateProductRequest } from '../requests/update-product.request';
 
 export const ProductController = {
     getAllProducts: async (req: Request, res: Response): Promise<void> => {
-        const response = await ProductService.getAllProducts();
+        const { search, code, name } = req.query;
+        const response = await ProductService.getAllProducts({
+            search: search as string,
+            code: code as string,
+            name: name as string
+        });
         res.status(response.status).json(response);
     },
 
