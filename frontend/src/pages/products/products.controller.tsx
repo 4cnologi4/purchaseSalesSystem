@@ -5,6 +5,7 @@ import type { ProductDto } from "@/dtos/Product.dto";
 import { ConfirmModal } from "@/components/ui/ConfirmModal";
 import { toast } from "sonner";
 import { Toaster } from "sonner";
+import { EditProductModal } from "@/components/modals/EditProductModal";
 
 export function ProductsController() {
     const [products, setProducts] = useState<ProductDto[]>([]);
@@ -12,6 +13,8 @@ export function ProductsController() {
     const [loading, setLoading] = useState(true);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedProduct, setSelectedProduct] = useState<ProductDto | null>(null);
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+    const [editingProduct, setEditingProduct] = useState<ProductDto | null>(null);
 
     useEffect(() => {
         fetchProducts();
@@ -61,6 +64,20 @@ export function ProductsController() {
         }
     };
 
+    const handleProductCreated = () => {
+        fetchProducts(); // Refrescar la lista después de crear
+    };
+
+    const handleEditClick = (product: ProductDto) => {
+        setEditingProduct(product);
+        setIsEditModalOpen(true);
+    };
+
+    const handleEditSuccess = () => {
+        fetchProducts();
+        setIsEditModalOpen(false);
+    };
+
     return (
         <>
             <ProductsView 
@@ -68,6 +85,8 @@ export function ProductsController() {
                 loading={loading}
                 onSearch={handleSearch}
                 onDeleteClick={handleDeleteClick}
+                onProductCreated={handleProductCreated}
+                onEditClick={handleEditClick}
             />
             <ConfirmModal
                 isOpen={isModalOpen}
@@ -76,6 +95,14 @@ export function ProductsController() {
                 onConfirm={handleConfirmDelete}
                 onCancel={() => setIsModalOpen(false)}
             />
+            {editingProduct && (
+                <EditProductModal
+                    isOpen={isEditModalOpen}
+                    product={editingProduct}
+                    onClose={() => setIsEditModalOpen(false)}
+                    onSuccess={handleEditSuccess}
+                />
+            )}
             <Toaster position="top-right" />
         </>
     );
