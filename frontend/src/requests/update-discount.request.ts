@@ -5,4 +5,5 @@ export interface UpdateDiscountRequest {
   isActive?: boolean;
   startDate?: string;
   endDate?: string;
+  productName?: string;
 } 

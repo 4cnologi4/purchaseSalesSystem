@@ -13,11 +13,28 @@ interface IDiscountRepository {
 
 export const DiscountRepository: IDiscountRepository = {
     getAllDiscounts: async (): Promise<Discount[]> => {
-        return discountRepository.find();
+        return discountRepository.find({
+            relations: ['product'],
+            select: {
+                product: {
+                    id: true,
+                    name: true,
+                }
+            }
+        });
     },
 
     getDiscountById: async (id: string): Promise<Discount | null> => {
-        return discountRepository.findOneBy({ id });
+        return discountRepository.findOne({
+            where: { id },
+            relations: ['product'],
+            select: {
+                product: {
+                    id: true,
+                    name: true,
+                }
+            }
+        });
     },
 
     createDiscount: async (discountData: Partial<Discount>): Promise<Discount> => {

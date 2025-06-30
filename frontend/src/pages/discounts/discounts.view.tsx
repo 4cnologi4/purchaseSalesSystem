@@ -36,6 +36,11 @@ export function DiscountsView({ discounts, loading, onSearch, onDeleteClick, onD
 			header: "ID del Producto"
 		},
 		{
+			key: "product",
+			header: "Nombre",
+			render: (discount: DiscountDto) => (discount.product.name)
+		},
+		{
 			key: "type",
 			header: "Tipo"
 		},

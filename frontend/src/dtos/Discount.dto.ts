@@ -1,6 +1,9 @@
+import type { ProductDto } from "./Product.dto";
+
 export interface DiscountDto {
   id: string;
   productId: string;
+  product: ProductDto;
   type: number;
   value: string;
   startDate: string;
