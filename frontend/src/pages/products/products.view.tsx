@@ -83,12 +83,15 @@ export function ProductsView({ products, loading, onSearch, onDeleteClick, onPro
 
     return (
         <div className="p-4">
-            <div className="flex justify-between items-center mb-4">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4">
                 <h1 className="text-2xl font-bold">Productos</h1>
-                <Button className="cursor-pointer"
-                    onClick={() => setIsCreateModalOpen(true)}>
+                <Button 
+                    className="cursor-pointer w-full sm:w-auto"
+                    onClick={() => setIsCreateModalOpen(true)}
+                >
                     <MdAdd className="mr-2 h-4 w-4" />
-                    Agregar Producto
+                    <span className="hidden sm:inline">Agregar Producto</span>
+                    <span className="sm:hidden">Agregar</span>
                 </Button>
             </div>
 
