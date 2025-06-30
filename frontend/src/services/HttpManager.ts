@@ -1,10 +1,12 @@
 import { AuthService } from "./auth.service";
+import { DiscountsService } from "./discounts.service";
 import { ProductsService } from "./products.service";
 
 class HttpManager {
     private static instance: HttpManager;
     public authService = AuthService;
     public productsService = ProductsService;
+    public discountService = DiscountsService;
 
     private constructor() { }
 

@@ -7,7 +7,7 @@ import { UpdateDiscountRequest } from '../requests/update-discount.request';
 import { v4 as uuidv4 } from "uuid";
 
 interface IDiscountService {
-    getAllDiscounts: () => Promise<ResponseDTO>;
+    getAllDiscounts: (search?: string) => Promise<ResponseDTO>;
     getDiscountById: (id: string) => Promise<ResponseDTO>;
     createDiscount: (discountData: CreateDiscountRequest) => Promise<ResponseDTO>;
     updateDiscount: (id: string, discountData: UpdateDiscountRequest) => Promise<ResponseDTO>;
@@ -15,13 +15,16 @@ interface IDiscountService {
 }
 
 export const DiscountService: IDiscountService = {
-    getAllDiscounts: async (): Promise<ResponseDTO> => {
+    getAllDiscounts: async (search?: string): Promise<ResponseDTO> => {
         try {
-            const discounts = await DiscountRepository.getAllDiscounts();
-            //            console.log({discounts})
+            const discounts = await DiscountRepository.getAllDiscounts(search);
             const data: DiscountDto[] = discounts.map(discount => ({
                 id: discount.id,
                 productId: discount.product_id,
+                product: discount.product ? {
+                    id: discount.product.id,
+                    name: discount.product.name,
+                } : undefined,
                 type: discount.type,
                 value: discount.value,
                 startDate: discount.start_date.toString(),
@@ -34,7 +37,7 @@ export const DiscountService: IDiscountService = {
             }));
             return new ResponseDTO(true, 'Descuentos obtenidos exitosamente', 200, data);
         } catch (error) {
-            console.log({ error })
+            console.error(error);
             return new ResponseDTO(false, 'Error al obtener los descuentos', 500);
         }
     },
@@ -48,6 +51,10 @@ export const DiscountService: IDiscountService = {
             const data: DiscountDto = {
                 id: discount.id,
                 productId: discount.product_id,
+                product: discount.product ? {
+                    id: discount.product.id,
+                    name: discount.product.name,
+                } : undefined,
                 type: discount.type,
                 value: discount.value,
                 startDate: discount.start_date.toString(),
@@ -60,6 +67,7 @@ export const DiscountService: IDiscountService = {
             };
             return new ResponseDTO(true, 'Descuento obtenido exitosamente', 200, data);
         } catch (error) {
+            console.error(error);
             return new ResponseDTO(false, 'Error al obtener el descuento', 500);
         }
     },
@@ -82,6 +90,10 @@ export const DiscountService: IDiscountService = {
             const data: DiscountDto = {
                 id: discount.id,
                 productId: discount.product_id,
+                product: discount.product ? {
+                    id: discount.product.id,
+                    name: discount.product.name,
+                } : undefined,
                 type: discount.type,
                 value: discount.value,
                 startDate: discount.start_date.toString(),
@@ -117,6 +129,10 @@ export const DiscountService: IDiscountService = {
             const data: DiscountDto = {
                 id: discount.id,
                 productId: discount.product_id,
+                product: discount.product ? {
+                    id: discount.product.id,
+                    name: discount.product.name,
+                } : undefined,
                 type: discount.type,
                 value: discount.value,
                 startDate: discount.start_date.toString(),

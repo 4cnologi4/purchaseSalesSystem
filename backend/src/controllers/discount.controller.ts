@@ -6,7 +6,8 @@ import { UpdateDiscountRequest } from '../requests/update-discount.request';
 
 export const DiscountController = {
     getAllDiscounts: async (req: Request, res: Response): Promise<void> => {
-        const response = await DiscountService.getAllDiscounts();
+        const { search } = req.query;
+        const response = await DiscountService.getAllDiscounts(search as string);
         res.status(response.status).json(response);
     },
 
