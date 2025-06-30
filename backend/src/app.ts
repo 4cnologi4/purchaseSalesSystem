@@ -5,7 +5,7 @@ import morgan from 'morgan';
 import authRoutes from './routes/auth.routes';
 import productRoutes from './routes/products.routes';
 import discountRoutes  from './routes/discount.routes';
-import { AppError } from './util/AppError';
+import salesRoutes from './routes/sale.routes';
 import { AppDataSource } from './database/data-source';
 
 const app = express();
@@ -20,6 +20,7 @@ app.get('/', (req, res) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/discounts', discountRoutes);
+app.use("/api/sales", salesRoutes);
 
 AppDataSource.initialize()
     .then(() => {

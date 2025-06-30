@@ -1,5 +1,4 @@
 import axios from "axios";
-import { toast } from "sonner";
 import { useAppStore } from "@/stores/appStore";
 
 // Configuración base de axios
