@@ -32,16 +32,17 @@ export function ProductsController() {
         }
     };
 
-    const handleSearch = (query: string) => {
-        if (!query) {
-            setFilteredProducts(products);
-            return;
+    const handleSearch = async (query: string) => {
+        try {
+            setLoading(true);
+            const data = await httpManager.productsService.getAll({ search: query });
+            setFilteredProducts(data);
+        } catch (error) {
+            console.error(error);
+            toast.error("Error al buscar productos");
+        } finally {
+            setLoading(false);
         }
-        const filtered = products.filter(product => 
-            product.name?.toLowerCase().includes(query.toLowerCase()) ||
-            product.code?.toLowerCase().includes(query.toLowerCase())
-        );
-        setFilteredProducts(filtered);
     };
 
     const handleDeleteClick = (product: ProductDto) => {

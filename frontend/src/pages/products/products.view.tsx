@@ -3,7 +3,7 @@ import { Input } from "@/components/ui/input";
 import { Table } from "@/components/ui/common-table";
 import type { ProductDto } from "@/dtos/Product.dto";
 import { Button } from "@/components/ui/button";
-import { MdDeleteForever, MdAdd, MdEdit } from "react-icons/md";
+import { MdDeleteForever, MdAdd, MdEdit, MdSearch } from "react-icons/md";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { CreateProductModal } from "@/components/modals/CreateProductModal";
 
@@ -18,6 +18,17 @@ interface ProductsViewProps {
 
 export function ProductsView({ products, loading, onSearch, onDeleteClick, onProductCreated, onEditClick }: ProductsViewProps) {
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+    const [searchQuery, setSearchQuery] = useState("");
+
+    const handleSearch = () => {
+        onSearch(searchQuery);
+    };
+
+    const handleKeyDown = (e: React.KeyboardEvent) => {
+        if (e.key === "Enter") {
+            handleSearch();
+        }
+    };
 
     const columns = [
         {
@@ -95,12 +106,24 @@ export function ProductsView({ products, loading, onSearch, onDeleteClick, onPro
                 </Button>
             </div>
 
-            <div className="mb-4">
-                <Input
-                    placeholder="Buscar productos..."
-                    onChange={(e) => onSearch(e.target.value)}
-                    className="mb-4"
-                />
+            <div className="mb-4 flex gap-2">
+                <div className="relative flex-1 max-w-md">
+                    <Input
+                        placeholder="Buscar productos..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        onKeyDown={handleKeyDown}
+                        className="pr-12"
+                    />
+                    <Button
+                        variant="default"
+                        size="sm"
+                        className="cursor-pointer absolute right-0 top-0 h-full px-3 bg-blue-600 hover:bg-blue-700"
+                        onClick={handleSearch}
+                    >
+                        <MdSearch className="h-5 w-5 text-white" />
+                    </Button>
+                </div>
             </div>
 
             {loading ? (
