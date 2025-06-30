@@ -68,7 +68,7 @@ export function EditDiscountModal({ isOpen, discount, onClose, onSuccess }: Edit
     <>
       <CommonModal isOpen={isOpen} title="Editar Descuento" onClose={onClose}>
         <form onSubmit={handleSubmit} className="space-y-4">
-          {/* Campo: ID del Producto */}
+          {/* Campo: ID del Producto (deshabilitado) */}
           <div>
             <Label htmlFor="productId">ID del Producto</Label>
             <Input
@@ -76,7 +76,8 @@ export function EditDiscountModal({ isOpen, discount, onClose, onSuccess }: Edit
               name="productId"
               value={formData.productId}
               onChange={handleChange}
-              required
+              disabled
+              className="bg-gray-100 cursor-not-allowed"
             />
           </div>
 
