@@ -4,6 +4,7 @@ import axiosInstance from "./axios.interceptor";
 import type { UpdateDiscountRequest } from "@/requests/update-discount.request";
 
 interface GetDiscountsOptions {
+    search?: string;
     productId?: string;
     isActive?: boolean;
     type?: number;
@@ -13,9 +14,7 @@ export const DiscountsService = {
     getAll: async (options?: GetDiscountsOptions): Promise<DiscountDto[]> => {
         try {
             const params = new URLSearchParams();
-            if (options?.productId) params.append('productId', options.productId);
-            if (options?.isActive !== undefined) params.append('isActive', String(options.isActive));
-            if (options?.type) params.append('type', String(options.type));
+            if (options?.search) params.append('search', options.search);
 
             const response = await axiosInstance.get("/discounts", { params });
             return response.data.data;

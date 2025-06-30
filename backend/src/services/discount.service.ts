@@ -7,7 +7,7 @@ import { UpdateDiscountRequest } from '../requests/update-discount.request';
 import { v4 as uuidv4 } from "uuid";
 
 interface IDiscountService {
-    getAllDiscounts: () => Promise<ResponseDTO>;
+    getAllDiscounts: (search?: string) => Promise<ResponseDTO>;
     getDiscountById: (id: string) => Promise<ResponseDTO>;
     createDiscount: (discountData: CreateDiscountRequest) => Promise<ResponseDTO>;
     updateDiscount: (id: string, discountData: UpdateDiscountRequest) => Promise<ResponseDTO>;
@@ -15,9 +15,9 @@ interface IDiscountService {
 }
 
 export const DiscountService: IDiscountService = {
-    getAllDiscounts: async (): Promise<ResponseDTO> => {
+    getAllDiscounts: async (search?: string): Promise<ResponseDTO> => {
         try {
-            const discounts = await DiscountRepository.getAllDiscounts();
+            const discounts = await DiscountRepository.getAllDiscounts(search);
             const data: DiscountDto[] = discounts.map(discount => ({
                 id: discount.id,
                 productId: discount.product_id,

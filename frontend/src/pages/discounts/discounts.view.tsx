@@ -21,7 +21,11 @@ export function DiscountsView({ discounts, loading, onSearch, onDeleteClick, onD
 	const [searchQuery, setSearchQuery] = useState("");
 
 	const handleSearch = () => {
-		onSearch(searchQuery);
+		if (searchQuery.trim() === "") {
+			onSearch("");  // Busqueda vacía para resetear
+		} else {
+			onSearch(searchQuery);
+		}
 	};
 
 	const handleKeyDown = (e: React.KeyboardEvent) => {

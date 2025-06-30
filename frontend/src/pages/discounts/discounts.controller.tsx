@@ -21,10 +21,10 @@ export function DiscountsController() {
 		fetchDiscounts();
 	}, []);
 
-	const fetchDiscounts = async () => {
+	const fetchDiscounts = async (search?: string) => {
 		try {
 			setLoading(true);
-			const data = await DiscountsService.getAll();
+			const data = await DiscountsService.getAll({ search });
 			setDiscounts(data);
 			setFilteredDiscounts(data);
 		} catch (error) {
@@ -37,8 +37,7 @@ export function DiscountsController() {
 	const handleSearch = async (query: string) => {
 		try {
 			setLoading(true);
-			const data = await httpManager.discountService.search(query);
-			setFilteredDiscounts(data);
+			await fetchDiscounts(query);
 		} catch (error) {
 			toast.error("Error al buscar descuentos");
 		} finally {
