@@ -1,6 +1,7 @@
 import { AppDataSource } from '../database/data-source';
 import { Sale } from '../database/entities/Sale';
 import { SaleDetail } from '../database/entities/SaleDetail';
+import { Discount } from '../database/entities/Discount';
 
 const saleRepository = AppDataSource.getRepository(Sale);
 const saleDetailRepository = AppDataSource.getRepository(SaleDetail);
@@ -12,6 +13,7 @@ interface ISaleRepository {
     updateSale: (id: string, saleData: Partial<Sale>) => Promise<Sale | null>;
     deleteSale: (id: string) => Promise<void>;
     getAllSales: (options?: { relations?: string[] }) => Promise<Sale[]>;
+    getDiscountByProductId: (productId: string) => Promise<Discount | null>;
 }
 
 export const SaleRepository: ISaleRepository = {
@@ -29,12 +31,12 @@ export const SaleRepository: ISaleRepository = {
 
             return {
                 ...detail,
-                saleId,
+                sale: { id: saleId },
                 unit_price,
                 subtotal,
                 discount,
                 total,
-                product_id: detail.product_id
+                product: { id: detail.product_id }
             };
         });
         return saleDetailRepository.save(saleDetails);
@@ -58,7 +60,16 @@ export const SaleRepository: ISaleRepository = {
 
     getAllSales: async (options?: { relations?: string[] }): Promise<Sale[]> => {
         return saleRepository.find({
-            relations: options?.relations || ["details"],
+            relations: options?.relations || ["details", "details.product"],
+            order: { created_at: "DESC" }
         });
+    },
+
+    getDiscountByProductId: async (productId: string): Promise<Discount | null> => {
+        const discount = await AppDataSource.getRepository(Discount)
+            .findOne({ 
+                where: { product_id: productId, is_active: true },
+            });
+        return discount;
     },
 };

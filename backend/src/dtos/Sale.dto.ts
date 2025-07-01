@@ -9,6 +9,15 @@ export interface SaleDto {
   updatedByUserId: string;
   createdAt?: string;
   updatedAt?: string;
+  details?: {
+    id: string;
+    productId: string;
+    quantity: number;
+    unitPrice: number;
+    subtotal: number;
+    discount: number;
+    total: number;
+  }[];
 }
 
 export interface SaleDetailDto {
