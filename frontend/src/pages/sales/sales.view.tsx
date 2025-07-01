@@ -6,6 +6,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 import type { SaleDto } from "@/dtos/Sale.dto";
 import { useState } from "react";
 import { RegisterSaleModal } from "@/components/modals/RegisterSaleModal";
+import { SaleDetailModal } from "@/components/modals/SaleDetailModa";
 
 interface SalesViewProps {
   sales: SaleDto[];
@@ -18,6 +19,7 @@ interface SalesViewProps {
 export function SalesView({ sales, loading, onSearch, onDeleteClick, onSaleCreated }: SalesViewProps) {
   const [localSearchQuery, setLocalSearchQuery] = useState("");
   const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
+  const [selectedSaleId, setSelectedSaleId] = useState<string | null>(null);
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter") {
@@ -38,7 +40,7 @@ export function SalesView({ sales, loading, onSearch, onDeleteClick, onSaleCreat
             <Button
               variant="outline"
               size="icon"
-              onClick={() => console.log("Ver detalle de venta:", sale.id)}
+              onClick={() => setSelectedSaleId(sale.id)}
               className="cursor-pointer"
             >
               <MdRemoveRedEye className="h-5 w-5" />
@@ -93,6 +95,12 @@ export function SalesView({ sales, loading, onSearch, onDeleteClick, onSaleCreat
         isOpen={isRegisterModalOpen}
         onClose={() => setIsRegisterModalOpen(false)}
         onSuccess={onSaleCreated}
+      />
+
+      <SaleDetailModal
+        saleId={selectedSaleId || ""}
+        isOpen={!!selectedSaleId}
+        onClose={() => setSelectedSaleId(null)}
       />
     </div>
   );

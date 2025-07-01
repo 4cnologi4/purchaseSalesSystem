@@ -16,3 +16,7 @@ export const AppDataSource = new DataSource({
   migrations: ['src/database/migrations/**/*.ts'],
   subscribers: [],
 });
+
+AppDataSource.setOptions({
+    logging: ["query", "error", "schema"]
+});
