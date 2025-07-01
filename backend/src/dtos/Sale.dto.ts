@@ -28,4 +28,9 @@ export interface SaleDetailDto {
   unitPrice: number;
   subtotal: number;
   discount: number;
+  total: number;
+  product?: {
+    id: string;
+    name: string;
+  };
 }

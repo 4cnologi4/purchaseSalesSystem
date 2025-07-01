@@ -19,10 +19,10 @@ export const SaleService: ISaleService = {
     createSale: async (saleData: CreateSaleRequest): Promise<ResponseDTO> => {
         const queryRunner = AppDataSource.createQueryRunner();
         await queryRunner.connect();
-        
+
         try {
             await queryRunner.startTransaction();
-            
+
             // 1. Validación de productos
             if (!saleData.products || saleData.products.length === 0) {
                 throw new Error("Debe incluir al menos un producto");
@@ -69,7 +69,7 @@ export const SaleService: ISaleService = {
 
             // 4. Guardar detalles con relación
             await queryRunner.manager.save(
-                SaleDetail, 
+                SaleDetail,
                 productsWithDiscounts.map(detail => ({
                     ...detail,
                     sale: { id: sale.id } // Relación con Sale
@@ -84,11 +84,11 @@ export const SaleService: ISaleService = {
             });
 
         } catch (error) {
-            console.log({error}); // Log detallado
+            console.log({ error }); // Log detallado
             await queryRunner.rollbackTransaction();
             console.error("Error en createSale:", error); // Log detallado
             return new ResponseDTO(
-                false, 
+                false,
                 error instanceof Error ? error.message : "Error al crear venta",
                 500
             );
@@ -114,6 +114,16 @@ export const SaleService: ISaleService = {
                 updatedByUserId: sale.updated_by_user_id,
                 createdAt: sale.created_at?.toISOString(),
                 updatedAt: sale.updated_at?.toISOString(),
+                details: sale.details?.map(detail => ({
+                    id: detail.id,
+                    productId: detail.product?.id,
+                    product: detail.product,
+                    quantity: detail.quantity,
+                    unitPrice: detail.unit_price,
+                    subtotal: detail.subtotal,
+                    discount: detail.discount,
+                    total: detail.total
+                }))
             };
             return new ResponseDTO(true, 'Sale retrieved successfully', 200, data);
         } catch (error) {

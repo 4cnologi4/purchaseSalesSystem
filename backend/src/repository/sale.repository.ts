@@ -45,7 +45,7 @@ export const SaleRepository: ISaleRepository = {
     getSaleById: async (id: string): Promise<Sale | null> => {
         return saleRepository.findOne({
             where: { id },
-            relations: ["details"],
+            relations: ["details", "details.product"],
         });
     },
 

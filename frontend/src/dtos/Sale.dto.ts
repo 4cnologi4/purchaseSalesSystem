@@ -14,6 +14,14 @@ export interface SaleDto {
     quantity: number;
     unitPrice: number;
   }>;
+  details?: {
+    productName: string;
+    quantity: number;
+    unitPrice: number;
+    subtotal: number;
+    discount: number;
+    total: number;
+  }[];
 }
 
 export interface SaleDetailDto {
@@ -25,4 +33,8 @@ export interface SaleDetailDto {
   unitPrice: number;
   subtotal: number;
   discount: number;
+  product?: {
+    id: string;
+    name: string;
+  };
 }
